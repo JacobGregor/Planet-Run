@@ -10,12 +10,15 @@ canvas.height =500;
 
 // Creates Player Character.
 class Player {
-    constructor(height,width,x,y,color) {
+    constructor(height,width,x,y,color,jumping,xVelocity,yVelocity) {
         this.height = height;
         this.width = width;
         this.x = x;
         this.y = y;
         this.color = color;
+        this.jumping = true;
+        this.xVelocity = xVelocity;
+        this.yVelocity = yVelocity
 
     }
     draw(){
@@ -27,6 +30,50 @@ class Player {
     }
 
 }
+
+// Player Movement
+
+const plrControls = {
+//sets the initial value of left,right & up to false.
+    left: false,
+    right: false,
+    up: false,
+//key event function is listening for left,right or up to generate
+    keyEvent: function (event) {
+
+        let keyPress = (KeyboardEvent == "keydown") ? true : false;
+//keys determines which key is being pressed
+        switch(event.keys){
+            case 37: plrControls.left = keyPress
+            break;
+            case 39: plrControls.right = keyPress
+            break;
+            case 38: plrControls.up = keyPress
+            break;
+        };
+
+
+    }
+};
+
+
+const loop = function () {
+    if (plrControls.up && Player.jumping == false) {
+        Player.yVelocity -= 20;
+        Player.jumping = true;
+    }
+
+    if (plrControls.left) {
+        Player.xVelocity -= 0.5;
+    }
+    
+    if (plrControls.right) {
+        Player.xVelocity += 0.5
+    }
+
+}
+
+
 
 class projectile {
     constructor(x,y,radius,color,velocity){
@@ -65,11 +112,11 @@ class projectile {
 
 // }
 
-const player = new Player(40,20,25,460,'green')
+const player = new Player(40,20,25,460,'green',true,0,0)
 player.draw();
 
 
-addEventListener('click',(event) => 
+const fire = addEventListener('click',(event) => 
 {
     console.log(event)
     const Projectile = new projectile(event.clientX,event.clientY,2,'red',null)
